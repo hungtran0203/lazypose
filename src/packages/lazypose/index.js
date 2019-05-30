@@ -119,6 +119,7 @@ export const loadEnhancer = enhancerDef => {
         return this.with(hoc(...args))
       }
     }
+    return null
   })
 }
 
