@@ -1,5 +1,6 @@
 import path from 'path'
 import nodeResolve from 'rollup-plugin-node-resolve'
+import localResolve from 'rollup-plugin-local-resolve'
 import babel from 'rollup-plugin-babel'
 import replace from 'rollup-plugin-replace'
 import commonjs from 'rollup-plugin-commonjs'
@@ -76,7 +77,7 @@ export default [
       format: 'cjs',
     },
     external: isExternal,
-    plugins: [babel(getBabelOptions({ useESModules: false }))],
+    plugins: [nodeResolve(), babel(getBabelOptions({ useESModules: false }))],
   },
 
   {
@@ -87,6 +88,7 @@ export default [
     },
     external: isExternal,
     plugins: [
+      nodeResolve(),
       babel(getBabelOptions({ useESModules: true })),
       sizeSnapshot({ matchSnapshot }),
     ],

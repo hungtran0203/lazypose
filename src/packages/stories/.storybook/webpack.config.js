@@ -4,7 +4,7 @@ const paths = require('./paths.js')
 module.exports = {
   resolve: {
     alias: {
-      '@lazypose': path.resolve(__dirname, '../../lazypose'),
+      '@lazypose': path.resolve(__dirname, '../../../../lib/packages/lazypose/dist/Lazypose.esm'),
     },
     extensions: ['.js', '.jsx', '.css', '.png', '.jpg', '.gif', '.jpeg'],
   },

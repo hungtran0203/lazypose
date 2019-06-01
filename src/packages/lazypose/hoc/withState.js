@@ -1,5 +1,4 @@
-import React, { useState } from 'react'
-import _ from 'lodash'
+import { useState } from 'react'
 import { applyThunkIfNeeded } from '../utils'
 
 export const withState = (
