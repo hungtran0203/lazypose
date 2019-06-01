@@ -1,15 +1,39 @@
 {
   "lib/packages/lazypose/dist/Lazypose.umd.js": {
-    "bundled": 561422,
-    "minified": 72258,
-    "gzipped": 25271
+    "bundled": 561444,
+    "minified": 72270,
+    "gzipped": 25273
   },
   "lib/packages/lazypose/dist/Lazypose.min.js": {
-    "bundled": 561422,
-    "minified": 72258,
-    "gzipped": 25271
+    "bundled": 561444,
+    "minified": 72270,
+    "gzipped": 25273
   },
   "lib/packages/lazypose/dist/Lazypose.esm.js": {
+    "bundled": 30791,
+    "minified": 14729,
+    "gzipped": 3417,
+    "treeshaked": {
+      "rollup": {
+        "code": 340,
+        "import_statements": 340
+      },
+      "webpack": {
+        "code": 1869
+      }
+    }
+  },
+  "lib/packages/recompose/dist/Recompose.umd.js": {
+    "bundled": 46501,
+    "minified": 16527,
+    "gzipped": 4632
+  },
+  "lib/packages/recompose/dist/Recompose.min.js": {
+    "bundled": 42939,
+    "minified": 15247,
+    "gzipped": 4202
+  },
+  "lib/packages/recompose/dist/Recompose.esm.js": {
     "bundled": 30791,
     "minified": 14729,
     "gzipped": 3417,
