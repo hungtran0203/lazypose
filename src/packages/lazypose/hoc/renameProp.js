@@ -10,3 +10,4 @@ export const renameProp = (oldName, newName) => ownerProps => {
   }
   return ownerProps
 }
+export default renameProp

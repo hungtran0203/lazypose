@@ -3,3 +3,5 @@ export const flattenProp = propName => ownerProps => {
 
   return { ...ownerProps, ...newProps }
 }
+
+export default flattenProp

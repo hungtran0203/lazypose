@@ -15,3 +15,5 @@ export const withState = (
     [stateUpdaterName]: setter,
   }
 }
+
+export default withState

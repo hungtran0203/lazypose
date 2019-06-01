@@ -12,3 +12,5 @@ export const withHandlers = handlerCreator => ownerProps => {
   )
   return { ...ownerProps, ...newProps }
 }
+
+export default withHandlers

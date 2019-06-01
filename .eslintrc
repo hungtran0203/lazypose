@@ -47,6 +47,9 @@
     "react/jsx-curly-brace-presence": [0],
     "react/no-unused-prop-types": [0],
     "react/require-default-props": [0],
-    "react/button-has-type": [0]
+    "react/button-has-type": [0],
+    
+    "import/no-cycle": [0],
+    "import/no-named-as-default": [0]
   }
 }

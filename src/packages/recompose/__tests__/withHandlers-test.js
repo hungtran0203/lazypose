@@ -19,10 +19,10 @@ test('withHandlers passes handlers to base component', () => {
 
   const Form = enhanceForm(({ value, onChange, onSubmit }) => (
     <form onSubmit={onSubmit}>
-      <label>
+      <span>
         Value
         <input type="text" value={value} onChange={onChange} />
-      </label>
+      </span>
       <p>{value}</p>
     </form>
   ))

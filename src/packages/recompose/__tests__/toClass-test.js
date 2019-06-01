@@ -21,7 +21,7 @@ test('toClass copies propTypes, displayName, contextTypes and defaultProps from 
   StatelessComponent.displayName = 'Stateless'
   StatelessComponent.propTypes = { foo: PropTypes.string }
   StatelessComponent.contextTypes = { bar: PropTypes.object }
-  StatelessComponent.defaultProps = { foo: 'bar', fizz: 'buzz' }
+  StatelessComponent.defaultProps = { foo: 'bar' }
 
   const TestComponent = toClass(StatelessComponent)
 

@@ -5,3 +5,5 @@ export const withProps = createProps => ownerProps => {
 
   return { ...ownerProps, ...newProps }
 }
+
+export default withProps

@@ -8,3 +8,4 @@ export const renameProps = nameMap => ownerProps => {
   })
   return rtnProps
 }
+export default renameProps

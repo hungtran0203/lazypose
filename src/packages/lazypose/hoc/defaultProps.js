@@ -5,3 +5,5 @@ export const defaultProps = props => ownerProps => {
 
   return { ...defProps, ...ownerProps }
 }
+
+export default defaultProps

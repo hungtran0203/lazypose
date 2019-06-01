@@ -24,3 +24,5 @@ export const withStateHandlers = (
     ...handers,
   }
 }
+
+export default withStateHandlers
