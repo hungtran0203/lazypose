@@ -93,6 +93,7 @@
     "npm": "3.x"
   },
   "dependencies": {
-    "enzyme-adapter-react-16": "^1.1.1"
+    "enzyme-adapter-react-16": "^1.1.1",
+    "eslint-config-react-app": "^4.0.1"
   }
 }
