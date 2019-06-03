@@ -1,25 +1,25 @@
 {
   "lib/packages/lazypose/dist/Lazypose.umd.js": {
-    "bundled": 564056,
-    "minified": 73144,
-    "gzipped": 25472
+    "bundled": 564408,
+    "minified": 73288,
+    "gzipped": 25508
   },
   "lib/packages/lazypose/dist/Lazypose.min.js": {
-    "bundled": 564056,
-    "minified": 73144,
-    "gzipped": 25472
+    "bundled": 564408,
+    "minified": 73288,
+    "gzipped": 25508
   },
   "lib/packages/lazypose/dist/Lazypose.esm.js": {
-    "bundled": 7816,
-    "minified": 3097,
-    "gzipped": 1037,
+    "bundled": 8151,
+    "minified": 3241,
+    "gzipped": 1076,
     "treeshaked": {
       "rollup": {
-        "code": 2523,
+        "code": 2667,
         "import_statements": 108
       },
       "webpack": {
-        "code": 3648
+        "code": 3794
       }
     }
   },

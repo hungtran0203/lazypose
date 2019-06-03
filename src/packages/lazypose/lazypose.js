@@ -110,8 +110,16 @@ class LazyPose {
     }
 
     // check for staticSetter
-    this.dataSchema.staticSetters.map(enhancer => enhancer(WrappedComponent))
+    this.data.staticSetters.map(enhancer => enhancer(WrappedComponent))
     return WrappedComponent
+  }
+
+  renderProps = renderer => {
+    const calculateProps = this.calc
+    return ownerProps => {
+      const mappedProps = calculateProps(ownerProps)
+      return renderer(mappedProps)
+    }
   }
 
   calc = (ownerProps, stateArr, componentData, context) =>
@@ -126,6 +134,10 @@ class LazyPose {
       return new LazyPose({ data: null })
     }
     return this
+  }
+
+  clone() {
+    return new LazyPose({ data: _.cloneDeep(this.data) })
   }
 }
 
