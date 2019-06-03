@@ -139,22 +139,24 @@ class LazyPose {
   clone() {
     return new LazyPose({ data: _.cloneDeep(this.data) })
   }
+
+  loadEnhancer = enhancerDef => {
+    _.entries(enhancerDef).map(([hocName, hoc]) => {
+      if (LazyPose.prototype[hocName]) {
+        // console.warn('enhancer exists, ignore')
+      } else {
+        LazyPose.prototype[hocName] = function proto(...args) {
+          return this.with(hoc(...args))
+        }
+      }
+      return null
+    })
+  }
 }
 
 export const lazypose = new LazyPose({})
 
-export const loadEnhancer = enhancerDef => {
-  _.entries(enhancerDef).map(([hocName, hoc]) => {
-    if (LazyPose.prototype[hocName]) {
-      // console.warn('enhancer exists, ignore')
-    } else {
-      LazyPose.prototype[hocName] = function proto(...args) {
-        return this.with(hoc(...args))
-      }
-    }
-    return null
-  })
-}
+export const loadEnhancer = lazypose.loadEnhancer
 
 /**
  * define hoc methods
