@@ -11,3 +11,7 @@ export * from './flattenProp'
 export * from './renameProp'
 export * from './renameProps'
 export * from './withStateHandlers'
+
+export * from './lifecycle'
+export * from './omitProps'
+export * from './withConst'

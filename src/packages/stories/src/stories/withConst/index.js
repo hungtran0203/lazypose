@@ -9,8 +9,9 @@ import lazypose from '@lazypose';
 
 const Component = lazypose()
   .withState('isToggle', 'setToggle', false)
+  .withConst('constProp', 'CONST STRING')
   .compose(
-    ({ isToggle, setToggle }) => (
+    ({ isToggle, setToggle, constProp }) => (
       <div>
         <Button onClick={(...args) => {
           action('clicked')(...args)
@@ -19,9 +20,10 @@ const Component = lazypose()
           Toggle State
         </Button>
         <div>{isToggle.toString()}</div>
+        <div>withConst Value: {constProp}</div>
       </div>
     )
   )
 
-storiesOf('withState', module)
-  .add('toggleState', () => <Component />)
+storiesOf('withConst', module)
+  .add('withConst props is not changed on rerendering', () => <Component />)

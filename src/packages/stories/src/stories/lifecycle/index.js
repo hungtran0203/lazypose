@@ -9,6 +9,17 @@ import lazypose from '@lazypose';
 
 const Component = lazypose()
   .withState('isToggle', 'setToggle', false)
+  .lifecycle({
+    componentWillMount() {
+      action('componentWillMount')()
+    },
+    componentDidMount() {
+      action('componentDidMount')()
+    },
+    componentWillUnmount() {
+      action('componentWillUnmount')()
+    }
+  })
   .compose(
     ({ isToggle, setToggle }) => (
       <div>
@@ -23,5 +34,5 @@ const Component = lazypose()
     )
   )
 
-storiesOf('withState', module)
-  .add('toggleState', () => <Component />)
+storiesOf('lifecycle', module)
+  .add('trigger lifecycle functions', () => <Component />)

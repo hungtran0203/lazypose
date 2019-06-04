@@ -5,7 +5,7 @@ import { storiesOf } from '@storybook/react';
 
 import lazypose from '@lazypose';
 
-const Component = lazypose
+const Component = lazypose()
 .setDisplayName('SetDisplayName')
 .compose(
   () => (

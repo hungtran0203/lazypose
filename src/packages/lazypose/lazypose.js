@@ -6,7 +6,7 @@ import * as allHocs from './hoc'
 /**
  * useage:
  *
- * lazypose
+ * lazypose()
  *  .mapProps(
  *    propsMapper: (ownerProps: Object) => Object,
  *  )
@@ -32,15 +32,45 @@ import * as allHocs from './hoc'
  */
 class LazyPose {
   data = null
+  queueStack = []
+
   dataSchema = {
-    propMappers: [],
-    staticSetters: [],
+    mapperQueues: {
+      defer: [],
+      static: [],
+      init: [],
+      default: [],
+    },
   }
 
   constructor({ data }) {
     this.initData(data)
   }
 
+  _pushQueue(name) {
+    this.queueStack.push(name)
+  }
+
+  _getActiveQueue() {
+    const queueName = this.queueStack.pop() || 'default'
+    return (
+      _.get(this.data.mapperQueues, queueName) || this.data.mapperQueues.default
+    )
+  }
+
+  getQueue(queueName) {
+    return [
+      ...(_.get(this.data.mapperQueues, queueName) ||
+        this.data.mapperQueues.default),
+    ]
+  }
+
+  /**
+   *
+   *
+   * @param {*} data
+   * @memberof LazyPose
+   */
   initData(data) {
     this.data = {}
     _.entries(this.dataSchema).map(([key, defVal]) => {
@@ -49,8 +79,18 @@ class LazyPose {
     })
   }
 
+  /**
+   *
+   *
+   * @memberof LazyPose
+   */
   isStatic = enhancer => !!_.get(enhancer, 'isStatic')
 
+  /**
+   *
+   *
+   * @memberof LazyPose
+   */
   createStatic = (key, value) => {
     const enhancer = Component => {
       _.set(Component, key, value)
@@ -60,40 +100,86 @@ class LazyPose {
     return enhancer
   }
 
+  /**
+   *
+   *
+   * @param {*} propMapper
+   * @returns
+   * @memberof LazyPose
+   */
   _add(propMapper) {
-    const instance = this.checkIfNewInstanceNeeded()
     if (this.isStatic(propMapper)) {
-      instance.data.staticSetters.push(propMapper)
-    } else {
-      instance.data.propMappers.push(propMapper)
+      this._pushQueue('static')
     }
-    return instance
+    this._getActiveQueue().push(propMapper)
+    return this
   }
 
+  /**
+   *
+   *
+   * @param {*} enhancer
+   * @returns
+   * @memberof LazyPose
+   */
   with(enhancer) {
     return this._add(enhancer)
   }
 
+  /**
+   *
+   *
+   * @param {*} cb
+   * @returns
+   * @memberof LazyPose
+   */
+  use(cb) {
+    if (cb instanceof LazyPose) {
+      this.combine(cb)
+    } else {
+      cb(this)
+    }
+    return this
+  }
+
+  /**
+   *
+   *
+   * @param {*} enhancer
+   * @returns
+   * @memberof LazyPose
+   */
+  get defer() {
+    this._pushQueue('defer')
+    return this
+  }
+
+  get static() {
+    this._pushQueue('static')
+    return this
+  }
+
+  get init() {
+    this._pushQueue('static')
+    return this
+  }
+
+  combine(...lazyposers) {
+    lazyposers.map(lazyposer => {
+      Object.keys(this.data.mapperQueues).map(queueName =>
+        this.data.mapperQueues[queueName].concat(lazyposer.getQueue(queueName))
+      )
+      return null
+    })
+  }
+
+  /**
+   *
+   *
+   * @memberof LazyPose
+   */
   compose = BaseComponent => {
     const calculateProps = this.calc
-
-    // return class LazyPoseComponent extends React.Component {
-    //   componentData = {};
-    //   WrappedComponent = (props) => {
-    //     // calculateProps
-    //     const mappedProps = calculateProps(
-    //       props,
-    //       [this.state, (...args) => this.setState(...args)],
-    //       this.componentData,
-    //       this.context
-    //     );
-    //     return <BaseComponent {...mappedProps} />
-    //   }
-    //   render() {
-    //     const WrappedComponent = this.WrappedComponent;
-    //     return (<WrappedComponent {...this.props} />);
-    //   }
-    // }
     const componentData = {}
     const context = {}
     const state = {}
@@ -110,10 +196,15 @@ class LazyPose {
     }
 
     // check for staticSetter
-    this.data.staticSetters.map(enhancer => enhancer(WrappedComponent))
+    this.data.mapperQueues.static.map(enhancer => enhancer(WrappedComponent))
     return WrappedComponent
   }
 
+  /**
+   *
+   *
+   * @memberof LazyPose
+   */
   renderProps = renderer => {
     const calculateProps = this.calc
     return ownerProps => {
@@ -122,29 +213,51 @@ class LazyPose {
     }
   }
 
-  calc = (ownerProps, stateArr, componentData, context) =>
-    this.data.propMappers.reduce(
-      (calProps, propMapper) =>
-        propMapper(calProps, stateArr, componentData, context),
-      ownerProps
-    )
-
-  checkIfNewInstanceNeeded() {
-    if (!this.data.propMappers.length) {
-      return new LazyPose({ data: null })
-    }
-    return this
+  /**
+   *
+   *
+   * @memberof LazyPose
+   */
+  calc = (ownerProps, stateArr, componentData, context) => {
+    // calculate with fixed queue order
+    let calcProps = ownerProps
+    const queues = [
+      this.data.mapperQueues.init,
+      this.data.mapperQueues.default,
+      this.data.mapperQueues.defer,
+    ]
+    queues.map(propMappers => {
+      calcProps = propMappers.reduce(
+        (calProps, propMapper) =>
+          propMapper(calProps, stateArr, componentData, context),
+        calcProps
+      )
+      return calcProps
+    })
+    return calcProps
   }
 
+  /**
+   *
+   *
+   * @returns
+   * @memberof LazyPose
+   */
   clone() {
     return new LazyPose({ data: _.cloneDeep(this.data) })
   }
 
+  /**
+   *
+   *
+   * @memberof LazyPose
+   */
   loadEnhancer = enhancerDef => {
     _.entries(enhancerDef).map(([hocName, hoc]) => {
       if (LazyPose.prototype[hocName]) {
         // console.warn('enhancer exists, ignore')
       } else {
+        // @TODO: only allow to extends enhancer with name is different with Lazypose methods
         LazyPose.prototype[hocName] = function proto(...args) {
           return this.with(hoc(...args))
         }
@@ -154,9 +267,9 @@ class LazyPose {
   }
 }
 
-export const lazypose = new LazyPose({})
+export const lazypose = () => new LazyPose({})
 
-export const loadEnhancer = lazypose.loadEnhancer
+export const loadEnhancer = lazypose().loadEnhancer
 
 /**
  * define hoc methods

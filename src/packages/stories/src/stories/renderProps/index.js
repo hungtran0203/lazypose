@@ -21,7 +21,7 @@ storiesOf('renderProps', module)
     () => (
       <div>
         <RenderPropComponent>
-          {lazypose
+          {lazypose()
             .withState('trackValue', 'setTrackVal', ({ value }) => value)
             .withHandlers({
               onChange: (ownerProps) => (...args) => {

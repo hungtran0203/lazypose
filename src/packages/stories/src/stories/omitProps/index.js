@@ -9,11 +9,14 @@ import lazypose from '@lazypose';
 
 const Component = lazypose()
   .withState('isToggle', 'setToggle', false)
+  .withState('stateToOmit', 'setStateToOmit', false)
+  .omitProps(['setStateToOmit'])
   .compose(
-    ({ isToggle, setToggle }) => (
+    ({ isToggle, setToggle, ...rest }) => (
       <div>
         <Button onClick={(...args) => {
           action('clicked')(...args)
+          action('Query Props')(rest)
           setToggle(!isToggle);
         }}>
           Toggle State
@@ -23,5 +26,5 @@ const Component = lazypose()
     )
   )
 
-storiesOf('withState', module)
-  .add('toggleState', () => <Component />)
+storiesOf('omitProps', module)
+  .add('omit a state setter', () => <Component />)
