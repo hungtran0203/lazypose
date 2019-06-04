@@ -8,7 +8,7 @@ import lazypose from '@lazypose';
 storiesOf('withProps', module)
   .add(
     'propCreator as function',
-    lazypose
+    lazypose()
       .withProps(() => ({
         title: 'propCreator as function'
       }))

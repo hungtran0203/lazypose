@@ -54,7 +54,7 @@ const Presentation = ({
   </div>
 );
 
-const Component = lazypose
+const Component = lazypose()
   .withState('counter', 'setCounter', 0)
   .withState('counter2', 'setCounter2', 0)
   .withState('counter3', 'setCounter3', 0)

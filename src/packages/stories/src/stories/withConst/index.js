@@ -7,7 +7,7 @@ import { Button } from '@storybook/react/demo';
 
 import lazypose from '@lazypose';
 
-const Component = lazypose
+const Component = lazypose()
   .withState('isToggle', 'setToggle', false)
   .withConst('constProp', 'CONST STRING')
   .compose(

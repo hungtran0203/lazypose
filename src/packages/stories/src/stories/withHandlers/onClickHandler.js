@@ -7,7 +7,7 @@ import { Button } from '@storybook/react/demo';
 
 import lazypose from '@lazypose';
 
-const HandlerCreators = lazypose
+const HandlerCreators = lazypose()
   .withState('counter', 'setCounter', 0)
   .withState('value', 'setValue', '')
   .withHandlers({
@@ -38,7 +38,7 @@ const HandlerCreators = lazypose
     )
   )
 
-const HandlerCreatorsFactory = lazypose
+const HandlerCreatorsFactory = lazypose()
   .withState('counter', 'setCounter', 0)
   .withHandlers(() => ({
     onClick: ({ counter, setCounter }) => () => {
@@ -46,7 +46,6 @@ const HandlerCreatorsFactory = lazypose
       setCounter(counter + 1)
     }
   }))
-  .setDisplayName('OnClickHandler')
   .compose(
     ({ counter, onClick }) => (
       <div>
