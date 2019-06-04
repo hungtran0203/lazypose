@@ -1,6 +1,8 @@
 import React from 'react'
 import _ from 'lodash'
 
+import { RenderComponentError } from './utils'
+
 import * as allHocs from './hoc'
 
 /**
@@ -180,19 +182,18 @@ class LazyPose {
    */
   compose = BaseComponent => {
     const calculateProps = this.calc
-    const componentData = {}
-    const context = {}
-    const state = {}
-    const setState = () => {}
 
     const WrappedComponent = props => {
-      const mappedProps = calculateProps(
-        props,
-        [state, setState],
-        componentData,
-        context
-      )
-      return <BaseComponent {...mappedProps} />
+      try {
+        const mappedProps = calculateProps(props)
+        return <BaseComponent {...mappedProps} />
+      } catch (error) {
+        if (error instanceof RenderComponentError) {
+          const { Component, props: propsToRender } = error
+          return <Component {...propsToRender} />
+        }
+        throw error
+      }
     }
 
     // check for staticSetter
@@ -218,7 +219,7 @@ class LazyPose {
    *
    * @memberof LazyPose
    */
-  calc = (ownerProps, stateArr, componentData, context) => {
+  calc = ownerProps => {
     // calculate with fixed queue order
     let calcProps = ownerProps
     const queues = [
@@ -228,8 +229,7 @@ class LazyPose {
     ]
     queues.map(propMappers => {
       calcProps = propMappers.reduce(
-        (calProps, propMapper) =>
-          propMapper(calProps, stateArr, componentData, context),
+        (calProps, propMapper) => propMapper(calProps),
         calcProps
       )
       return calcProps

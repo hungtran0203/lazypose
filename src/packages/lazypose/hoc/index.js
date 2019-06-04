@@ -15,3 +15,7 @@ export * from './withStateHandlers'
 export * from './lifecycle'
 export * from './omitProps'
 export * from './withConst'
+
+export * from './branch'
+export * from './renderComponent'
+export * from './renderNothing'
