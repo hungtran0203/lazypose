@@ -1,38 +1,23 @@
-Recompose
+Lazypose
 -----
 
-[![build status](https://img.shields.io/travis/acdlite/recompose/master.svg?style=flat-square)](https://travis-ci.org/acdlite/recompose)
-[![coverage](https://img.shields.io/codecov/c/github/acdlite/recompose.svg?style=flat-square)](https://codecov.io/github/acdlite/recompose)
-[![code climate](https://img.shields.io/codeclimate/github/acdlite/recompose.svg?style=flat-square)](https://codeclimate.com/github/acdlite/recompose)
-[![npm version](https://img.shields.io/npm/v/recompose.svg?style=flat-square)](https://www.npmjs.com/package/recompose)
-[![npm downloads](https://img.shields.io/npm/dm/recompose.svg?style=flat-square)](https://www.npmjs.com/package/recompose)
-
-Recompose is a React utility belt for function components and higher-order components. Think of it like lodash for React.
+Lazypose is a React Hook utility for building and combining hooks to a single Higher-order functional component.
 
 [**Full API documentation**](docs/API.md) - Learn about each helper
-
-[**Recompose Base Fiddle**](https://jsfiddle.net/evenchange4/p3vsmrvo/1599/) - Easy way to dive in
 
 ```
 npm install recompose --save
 ```
 
-**📺 Watch Andrew's [talk on Recompose at React Europe](https://www.youtube.com/watch?v=zD_judE-bXk).**
-*(Note: Performance optimizations he speaks about have been removed, more info [here](https://github.com/acdlite/recompose/releases/tag/v0.26.0))*
+## You can use Lazypose to...
 
-### Related modules
+### ...lift state, context, callbacks, handlers into functional wrappers
 
-[**recompose-relay**](src/packages/recompose-relay) — Recompose helpers for Relay
-
-## You can use Recompose to...
-
-### ...lift state into functional wrappers
-
-Helpers like `withState()` and `withReducer()` provide a nicer way to express state updates:
+Helpers like `.withState()` provide a nicer way to express state updates:
 
 ```js
-const enhance = withState('counter', 'setCounter', 0)
-const Counter = enhance(({ counter, setCounter }) =>
+const enhancer = lazypose().withState('counter', 'setCounter', 0)
+const Counter = enhancer.compose(({ counter, setCounter }) =>
   <div>
     Count: {counter}
     <button onClick={() => setCounter(n => n + 1)}>Increment</button>
@@ -41,115 +26,186 @@ const Counter = enhance(({ counter, setCounter }) =>
 )
 ```
 
-Or with a Redux-style reducer:
+### ...to inject data to renderProps pattern
+
+Helpers like `.renderProps()` is used for inject additional state/data to renderProps pattern:
 
 ```js
-const counterReducer = (count, action) => {
-  switch (action.type) {
-  case INCREMENT:
-    return count + 1
-  case DECREMENT:
-    return count - 1
-  default:
-    return count
+<Downshift
+  onChange={selection => alert(`You selected ${selection.value}`)}
+  itemToString={item => (item ? item.value : '')}
+>{
+lazypose()
+.withState('value', 'changeValue', ({ value }) => value.toLowerCase())
+.renderProps(
+  ({
+      getInputProps,
+      getItemProps,
+      getLabelProps,
+      getMenuProps,
+      isOpen,
+      inputValue,
+      highlightedIndex,
+      selectedItem,
+    }) => (
+      <div>
+        <label {...getLabelProps()}>Enter a fruit</label>
+        <input {...getInputProps()} />
+        <ul {...getMenuProps()}>
+          {isOpen
+            ? items
+                .filter(item => !inputValue || item.value.includes(inputValue))
+                .map((item, index) => (
+                  <li
+                    {...getItemProps({
+                      key: item.value,
+                      index,
+                      item,
+                      style: {
+                        backgroundColor:
+                          highlightedIndex === index ? 'lightgray' : 'white',
+                        fontWeight: selectedItem === item ? 'bold' : 'normal',
+                      },
+                    })}
+                  >
+                    {item.value}
+                  </li>
+                ))
+            : null}
+        </ul>
+      </div>
+    )
+)
   }
-}
-
-const enhance = withReducer('counter', 'dispatch', counterReducer, 0)
-const Counter = enhance(({ counter, dispatch }) =>
-  <div>
-    Count: {counter}
-    <button onClick={() => dispatch({ type: INCREMENT })}>Increment</button>
-    <button onClick={() => dispatch({ type: DECREMENT })}>Decrement</button>
-  </div>
-)
-```
-
-### ...perform the most common React patterns
-
-Helpers like `componentFromProp()` and `withContext()` encapsulate common React patterns into a simple functional interface:
-
-```js
-const enhance = defaultProps({ component: 'button' })
-const Button = enhance(componentFromProp('component'))
-
-<Button /> // renders <button>
-<Button component={Link} /> // renders <Link />
-```
-
-```js
-const provide = store => withContext(
-  { store: PropTypes.object },
-  () => ({ store })
-)
-
-// Apply to base component
-// Descendants of App have access to context.store
-const AppWithContext = provide(store)(App)
+  </Downshift>
 ```
 
 ### ...optimize rendering performance
 
-No need to write a new class just to implement `shouldComponentUpdate()`. Recompose helpers like `pure()` and `onlyUpdateForKeys()` do this for you:
-
-```js
-// A component that is expensive to render
-const ExpensiveComponent = ({ propA, propB }) => {...}
-
-// Optimized version of same component, using shallow comparison of props
-// Same effect as extending React.PureComponent
-const OptimizedComponent = pure(ExpensiveComponent)
-
-// Even more optimized: only updates if specific prop keys have changed
-const HyperOptimizedComponent = onlyUpdateForKeys(['propA', 'propB'])(ExpensiveComponent)
-```
-
-### ...interoperate with other libraries
-
-Recompose helpers integrate really nicely with external libraries like Relay, Redux, and RxJS
-
+Lazypose was heavily inspired by `recompose` and support most of enhancer privided by that library. Also Lazypose is written to resolve the main rendering performance disadvantage of recompose. While `recompose` produces each WrappingHOCComponent for each composed enhancer, `lazypose` produces only one WrappingHOCComponent
+`Recompose way`
 ```js
 const enhance = compose(
-  // This is a Recompose-friendly version of Relay.createContainer(), provided by recompose-relay
-  createContainer({
-    fragments: {
-      post: () => Relay.QL`
-        fragment on Post {
-          title,
-          content
-        }
-      `
+  withState('username', 'setUsername', '')
+  withState('firstname', 'setFirstname', '')
+  withState('lastname', 'setLastname', '')
+  withHandlers({
+    onSubmit: ({ username, firstname, lastname }) => () => {
+      subbmitForm({ username, firstname, lastname })
     }
   }),
-  flattenProp('post')
-)
-
-const Post = enhance(({ title, content }) =>
-  <article>
-    <h1>{title}</h1>
-    <div>{content}</div>
-  </article>
-)
+  lifecyle({
+    componentDidMount() {
+      loadUserData(this.props.username)
+    }
+  })
+)(PresentationComponent)
+```
+`in React devtool inspection`
+```js
+  <withState(withState(withState(withHandlers(lifecyle))))>
+    <withState(withState(withHandlers(lifecyle)))>
+      <withState(withHandlers(lifecyle))>
+        <withHandlers(lifecyle)>
+          <lifecyle>
+            <PresentationComponent />
+          </lifecyle>          
+        </withHandlers(lifecyle)>        
+      </withState(withHandlers(lifecyle))>      
+    </withState(withState(withHandlers(lifecyle)))>    
+  </withState(withState(withState(withHandlers(lifecyle))))>  
 ```
 
-### ...build your own libraries
+`Lazypose way`
+```js
+const enhance = lazypose()
+  .withState('username', 'setUsername', '')
+  .withState('firstname', 'setFirstname', '')
+  .withState('lastname', 'setLastname', '')
+  .withHandlers({
+    onSubmit: ({ username, firstname, lastname }) => () => {
+      subbmitForm({ username, firstname, lastname })
+    }
+  }),
+  .lifecyle({
+    componentDidMount() {
+      loadUserData(this.props.username)
+    }
+  })
+  .compose(PresentationComponent)
+```
+`in React devtool inspection`
+```js
+  <LazyposeWrapper>
+    <PresentationComponent />
+  </LazyposeWrapper>  
+```
 
-Many React libraries end up implementing the same utilities over and over again, like `shallowEqual()` and `getDisplayName()`. Recompose provides these utilities for you.
+### ...reuse enhancer or group of enhancers
+```js
+const formEnhancer = lazypose()
+  .withState('formField1', 'setField1')
+  .withState('formField2', 'setField2')
+  .withState('formField3', 'setField3')
+  
+const ContainerComponent = formEnhancer
+  .clone()
+  .withHandlers({
+    onSubmit: ({ formField1, formField2, formField3 }) => () => {
+      subbmitForm1({ formField1, formField2, formField3 })
+    }
+  }),
+  .compose(FORM1)
+  
+const ContainerComponent2 = formEnhancer
+  .clone()
+  .withState('formField4', 'setField4')
+  .withHandlers({
+    onSubmit: ({ formField1, formField2, formField3, formField4 }) => () => {
+      subbmitForm2({ formField1, formField2, formField3, formField4 })
+    }
+  }),
+  .compose(FORM1)
+```
+
+### ...interoperate with other React Hook libraries
+
+Lazypose allows to add new enhancer by using `loadEnhancer` method
 
 ```js
-// Any Recompose module can be imported individually
-import getDisplayName from 'recompose/getDisplayName'
-ConnectedComponent.displayName = `connect(${getDisplayName(BaseComponent)})`
+lazypose().loadEnhancer({
+  withWindowSize: (options) => (ownerProps) => {
+     .....
+  },
+  withQuery: (options) => (ownerProps) => {
+     .....
+  },
+  mapPropsStream: (options) => (ownerProps) => {
+     .....
+  },
+});
 
-// Or, even better:
-import wrapDisplayName from 'recompose/wrapDisplayName'
-ConnectedComponent.displayName = wrapDisplayName(BaseComponent, 'connect')
-
-import toClass from 'recompose/toClass'
-// Converts a function component to a class component, e.g. so it can be given
-// a ref. Returns class components as is.
-const ClassComponent = toClass(FunctionComponent)
+// then
+const Container = lazypose()
+  .withWindowSize(options)
+  .withQuery(options)
+  .mapPropsStream(options)
+  .compose(PRESENTATION)
 ```
+
+### ...full control of props mapping flow
+Lazypose maintain the order of enhancers pushed to lazypose to run the props mapping flow with the same order.
+Also enhancers are kept in 3 difference queues: `init`, `defer` and `default` queue.
+Where `init` queue is run first then `default` queue and `defer` queue is last.
+By utilizing different queues properly, we can control to init nessesary props or clean up props easily
+```js
+const FORM = lazypose()
+  .withConst('firstname').defer.omitProps('firstname')
+  .withConst('lastname').defer.omitProps('lastname')
+  .withConst('fullname', ({ firstname, lastname } ) => `${firstname} ${lastname}`
+  .init.withState('field1', 'setField1')
+```
+
 
 ### ...and more
 
@@ -157,28 +213,12 @@ const ClassComponent = toClass(FunctionComponent)
 
 [Read them here](docs/API.md)
 
-## Flow support
-
-[Read the docs](docs/flow.md)
-
-## Translation
-
-[Traditional Chinese](https://github.com/neighborhood999/recompose)
-
 ## Why
 
-Forget ES6 classes vs. `createClass()`.
+`Recompose` was an amazing utility for composing Presentation component from enhancers. With `Recompose` utilities, developer can easily convert a ES6 class component to functional component. So Presentation component will become a Dumb UI Component, it renders whatever props it received without internal state, handler, callback and effect. But it also has downside that create too many middle WrapperComponent and it impact to rendering performance. When React version 16.8.0 is release with React Hook feature, `Recompose` is replaced and prefer to use over `Recompose`. Developer can re-write code by using React Hooks, but with React Hooks, testing will be not simple causes state, data is declared inside component. `Recompose` gave developer a change to move all state, handler, callback, context data outside of Presentation Component then testing Presentation Component is simple by mockup props properly.
+The main concept of `Lazypose` is to move all Reack Hooks to a single wrapper functional component and the results of React Hooks are converted or mapped to props then passing to Dumb Presentation Component.
 
-An idiomatic React application consists mostly of function components.
-
-```js
-const Greeting = props =>
-  <p>
-    Hello, {props.name}!
-  </p>
-```
-
-Function components have several key advantages:
+`Lazypose` provide utility to create function components that have several key advantages as stated in `recompose` README:
 
 - They help prevent abuse of the `setState()` API, favoring props instead.
 - They encourage the ["smart" vs. "dumb" component pattern](https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0).
@@ -186,7 +226,6 @@ Function components have several key advantages:
 - They discourage giant, complicated components that do too many things.
 - In the future, they will allow React to make performance optimizations by avoiding unnecessary checks and memory allocations.
 
-(Note that although Recompose encourages the use of function components whenever possible, it works with normal React components as well.)
 
 ### Higher-order components made easy
 
