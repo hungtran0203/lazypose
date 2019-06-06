@@ -6,7 +6,7 @@ Lazypose is a React Hook utility for building and combining hooks to a single Hi
 [**Full API documentation**](docs/API.md) - Learn about each helper
 
 ```
-npm install recompose --save
+npm install lazypose --save
 ```
 
 ## You can use Lazypose to...
