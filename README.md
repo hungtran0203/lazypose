@@ -1,4 +1,4 @@
-Recompose
+Lazypose
 -----
 
 Lazypose is a React Hook utility for building and combining hooks to a single Higher-order functional component.
