@@ -1,7 +1,7 @@
 Lazypose
 -----
 
-Lazypose is a React Hook utility for building and combining hooks to a single Higher-order functional component.
+Lazypose is a React Hook utility for building and combining React Hooks to single level Higher-order wrapper functional components.
 
 [**Full API documentation**](docs/API.md) - Learn about each helper
 
