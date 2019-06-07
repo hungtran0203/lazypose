@@ -214,6 +214,9 @@ class LazyPose {
     }
   }
 
+  toRenderProps = renderer => (
+    <RenderProps>{this.renderProps(renderer)}</RenderProps>
+  )
   /**
    *
    *
@@ -270,6 +273,8 @@ class LazyPose {
 export const lazypose = () => new LazyPose({})
 
 export const loadEnhancer = lazypose().loadEnhancer
+
+export const RenderProps = ({ children }) => children()
 
 /**
  * define hoc methods
