@@ -235,126 +235,16 @@ Recompose focuses on another unit of composition: **higher-order components** (H
 
 Recompose provides a toolkit of helper functions for creating higher-order components.
 
-## [Should I use this? Performance and other concerns](docs/performance.md)
-
 ## Usage
 
 All functions are available on the top-level export.
 
 ```js
-import { compose, mapProps, withState /* ... */ } from 'recompose'
+import lazypose from 'lazypose'
+const enahncer = lazypose().withState().withProps()...
 ```
-
-**Note:** `react` is a _peer dependency_ of Recompose.  If you're using `preact`, add this to your `webpack.config.js`:
-
-```js
-resolve: {
-  alias: {
-    react: "preact"
-  }
-}
-```
-
-### Composition
-
-Recompose helpers are designed to be composable:
-
-```js
-const BaseComponent = props => {...}
-
-// This will work, but it's tedious
-let EnhancedComponent = pure(BaseComponent)
-EnhancedComponent = mapProps(/*...args*/)(EnhancedComponent)
-EnhancedComponent = withState(/*...args*/)(EnhancedComponent)
-
-// Do this instead
-// Note that the order has reversed — props flow from top to bottom
-const enhance = compose(
-  withState(/*...args*/),
-  mapProps(/*...args*/),
-  pure
-)
-const EnhancedComponent = enhance(BaseComponent)
-```
-
-Technically, this also means you can use them as decorators (if that's your thing):
-
-```js
-@withState(/*...args*/)
-@mapProps(/*...args*/)
-@pure
-class Component extends React.Component {...}
-```
-
-### Optimizing bundle size
-
-Since `0.23.1` version recompose got support of ES2015 modules.
-To reduce size all you need is to use bundler with tree shaking support
-like [webpack 2](https://github.com/webpack/webpack) or [Rollup](https://github.com/rollup/rollup).
-
-#### Using babel-plugin-lodash
-
-[babel-plugin-lodash](https://github.com/lodash/babel-plugin-lodash) is not only limited to [lodash](https://github.com/lodash/lodash). It can be used with `recompose` as well.
-
-This can be done by updating `lodash` config in `.babelrc`.
-
-```diff
- {
--  "plugins": ["lodash"]
-+  "plugins": [
-+    ["lodash", { "id": ["lodash", "recompose"] }]
-+  ]
- }
-```
-
-After that, you can do imports like below without actually including the entire library content.
-
-```js
-import { compose, mapProps, withState } from 'recompose'
-```
-
-### Debugging
-
-It might be hard to trace how does `props` change between HOCs. A useful tip is you can create a debug HOC to print out the props it gets without modifying the base component. For example:
-
-make
-
-```js
-const debug = withProps(console.log)
-```
-
-then use it between HOCs
-
-```js
-const enhance = compose(
-  withState(/*...args*/),
-  debug, // print out the props here
-  mapProps(/*...args*/),
-  pure
-)
-```
-
-
-## Who uses Recompose
-If your company or project uses Recompose, feel free to add it to [the official list of users](https://github.com/acdlite/recompose/wiki/Sites-Using-Recompose) by [editing](https://github.com/acdlite/recompose/wiki/Sites-Using-Recompose/_edit) the wiki page.
-
-## Recipes for Inspiration
-We have a community-driven Recipes page. It's a place to share and see recompose patterns for inspiration. Please add to it! [Recipes](https://github.com/acdlite/recompose/wiki/Recipes).
-
-## Feedback wanted
-
-Project is still in the early stages. Please file an issue or submit a PR if you have suggestions! Or ping me (Andrew Clark) on [Twitter](https://twitter.com/acdlite).
-
 
 ## Getting Help
-
-**For support or usage questions like “how do I do X with Recompose” and “my code doesn't work”, please search and ask on [StackOverflow with a Recompose tag](http://stackoverflow.com/questions/tagged/recompose?sort=votes&pageSize=50) first.**
-
-We ask you to do this because StackOverflow has a much better job at keeping popular questions visible. Unfortunately good answers get lost and outdated on GitHub.
-
-Some questions take a long time to get an answer. **If your question gets closed or you don't get a reply on StackOverflow for longer than a few days,** we encourage you to post an issue linking to your question. We will close your issue but this will give people watching the repo an opportunity to see your question and reply to it on StackOverflow if they know the answer.
-
-Please be considerate when doing this as this is not the primary purpose of the issue tracker.
 
 ### Help Us Help You
 
