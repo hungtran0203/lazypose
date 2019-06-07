@@ -9,6 +9,32 @@ Lazypose is a React Hook utility for building and combining hooks to a single Hi
 npm install lazypose --save
 ```
 
+## Why
+
+When React version 16.8.0 is release with React Hook feature, `Recompose` is replaced and prefer to use over `Recompose`. Developer can re-write code by using React Hooks, but with React Hooks, testing will be not simple causes state, data is declared inside component. 
+
+The main concept of `Lazypose` is to move all Reack Hooks to a single wrapper functional component. And then results of React Hooks are converted or mapped to props then passing to Dumb Presentation Component.
+
+`Lazypose` provide utility to create function component that have several key advantages as stated in `recompose`:
+
+- They help prevent abuse of the `setState()` API, favoring props instead.
+- They encourage the ["smart" vs. "dumb" component pattern](https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0).
+- They encourage code that is more reusable and modular.
+- They discourage giant, complicated components that do too many things.
+- Functions can be composed together.
+- The code is easily tested.
+- There aren’t any observable side effects.
+- The data is immutable.
+- In the future, they will allow React to make performance optimizations by avoiding unnecessary checks and memory allocations.
+
+### Higher-order components made easy
+
+Most of the time when we talk about composition in React, we're talking about composition of components. For example, a `<Blog>` component may be composed of many `<Post>` components, which are composed of many `<Comment>` components.
+
+Recompose focuses on another unit of composition: **higher-order components** (HoCs). HoCs are functions that accept a base component and return a new component with additional functionality. They can be used to abstract common tasks into reusable pieces.
+
+Recompose provides a toolkit of helper functions for creating higher-order components.
+
 ## You can use Lazypose to...
 
 ### ...lift state, context, callbacks, handlers into functional wrappers
@@ -16,6 +42,7 @@ npm install lazypose --save
 Helpers like `.withState()` provide a nicer way to express state updates:
 
 ```js
+import lazypose from 'lazypose'
 const enhancer = lazypose().withState('counter', 'setCounter', 0)
 const Counter = enhancer.compose(({ counter, setCounter }) =>
   <div>
@@ -213,27 +240,6 @@ const FORM = lazypose()
 
 [Read them here](docs/API.md)
 
-## Why
-
-`Recompose` was an amazing utility for composing Presentation component from enhancers. With `Recompose` utilities, developer can easily convert a ES6 class component to functional component. So Presentation component will become a Dumb UI Component, it renders whatever props it received without internal state, handler, callback and effect. But it also has downside that create too many middle WrapperComponent and it impact to rendering performance. When React version 16.8.0 is release with React Hook feature, `Recompose` is replaced and prefer to use over `Recompose`. Developer can re-write code by using React Hooks, but with React Hooks, testing will be not simple causes state, data is declared inside component. `Recompose` gave developer a change to move all state, handler, callback, context data outside of Presentation Component then testing Presentation Component is simple by mockup props properly.
-The main concept of `Lazypose` is to move all Reack Hooks to a single wrapper functional component and the results of React Hooks are converted or mapped to props then passing to Dumb Presentation Component.
-
-`Lazypose` provide utility to create function components that have several key advantages as stated in `recompose` README:
-
-- They help prevent abuse of the `setState()` API, favoring props instead.
-- They encourage the ["smart" vs. "dumb" component pattern](https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0).
-- They encourage code that is more reusable and modular.
-- They discourage giant, complicated components that do too many things.
-- In the future, they will allow React to make performance optimizations by avoiding unnecessary checks and memory allocations.
-
-
-### Higher-order components made easy
-
-Most of the time when we talk about composition in React, we're talking about composition of components. For example, a `<Blog>` component may be composed of many `<Post>` components, which are composed of many `<Comment>` components.
-
-Recompose focuses on another unit of composition: **higher-order components** (HoCs). HoCs are functions that accept a base component and return a new component with additional functionality. They can be used to abstract common tasks into reusable pieces.
-
-Recompose provides a toolkit of helper functions for creating higher-order components.
 
 ## Usage
 
