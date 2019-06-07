@@ -6,42 +6,17 @@ In these API docs, a **higher-order component** (HOC) refers to a function that 
 const EnhancedComponent = lazypose()(BaseComponent)
 ```
 
-This form makes HOCs (sometimes called **enhancers**) composable:
-
-```js
-const composedHoc = compose(hoc1, hoc2, hoc3)
-
-// Same as
-const composedHoc = BaseComponent => hoc1(hoc2(hoc3(BaseComponent)))
-```
-
-Most Recompose helpers are **functions that return higher-order components**:
-
-```js
-const hoc = mapProps(ownerProps => childProps)
-const EnhancedComponent = hoc(BaseComponent)
-
-// Same as
-const EnhancedComponent = mapProps(ownerProps => childProps)(BaseComponent)
-```
-
-Some, like `pure`, are higher-order components themselves:
-
-```js
-const PureComponent = pure(BaseComponent)
-```
-
 ## TOC
 
 - [API](#api)
   - [TOC](#toc)
   - [Higher-order components](#higher-order-components)
-    - [`mapProps()`](#mapprops)
+    - [`.mapProps()`](#mapprops)
     - [`.withProps()`](#withprops)
     - [`.withPropsOnChange()`](#withpropsonchange)
     - [`.withHandlers()`](#withhandlers)
     - [`.defaultProps()`](#defaultprops)
-    - [`.renameProp()`](#renameprop)
+    - [`.renameProp()`](#.renameprop)
     - [`.renameProps()`](#renameprops)
     - [`.flattenProp()`](#flattenprop)
     - [`.withState()`](#withstate)
@@ -50,10 +25,14 @@ const PureComponent = pure(BaseComponent)
     - [`.branch()`](#branch)
     - [`.renderComponent()`](#rendercomponent)
     - [`.renderNothing()`](#rendernothing)
-    - [`withContext()`](#withcontext)
+    - [`.withContext()`](#withcontext)
     - [`.lifecycle()`](#lifecycle)
-    - [`toRenderProps()`](#torenderprops)
-    - [`fromRenderProps()`](#fromrenderprops)
+  - [React Hooks wrappers](#react-hooks-wrappers)
+    - [`.withEffect()`](#witheffect)
+    - [`.withLayoutEffect()`](#withlayouteffect)
+    - [`.withRef()`](#withref)
+    - [`.withCallback()`](#withcallback)
+    - [`.withMemo()`](#withmemo)
   - [Static property helpers](#static-property-helpers)
     - [`.setStatic()`](#setstatic)
     - [`.setDisplayName()`](#setdisplayname)
@@ -72,7 +51,7 @@ const PureComponent = pure(BaseComponent)
 
 ## Higher-order components
 
-### `mapProps()`
+### `.mapProps()`
 
 ```js
 .mapProps(
@@ -403,7 +382,7 @@ const Post = enhancer.compose(({ title, author, content }) =>
 )
 ```
 
-### `withContext()`
+### `.withContext()`
 
 ```js
 .withContext(
@@ -440,73 +419,46 @@ const PostsListWithData = lazypose().lifecycle({
   }
 })(PostsList);
 ```
+## React Hooks wrappers
+These enhancers are implemented by using React Hooks.
 
-### `toRenderProps()`
-
+### `.withEffect()`
 ```js
-toRenderProps(
-  hoc: HigherOrderPropMapper
-): ReactFunctionalComponent
+.withEffect(baseComponent: ReactClass | ReactFunctionalComponent): ReactFunctionalComponent
 ```
 
-Creates a component that accepts a function as a children with the high-order component applied to it. 
+Document needed.
 
-Example:
+### `.withLayoutEffect()`
 ```js
-const enhance = withProps(({ foo }) => ({ fooPlusOne: foo + 1 }))
-const Enhanced = toRenderProps(enhance)
-
-<Enhanced foo={1}>{({ fooPlusOne }) => <h1>{fooPlusOne}</h1>}</Enhanced>
-// renders <h1>2</h1>
+.withLayoutEffect(baseComponent: ReactClass | ReactFunctionalComponent): ReactFunctionalComponent
 ```
 
-### `fromRenderProps()`
+Document needed.
 
+### `.withMemo()`
 ```js
-fromRenderProps(
-  RenderPropsComponent: ReactClass | ReactFunctionalComponent,
-  propsMapper: (...props: any[]) => Object,
-  renderPropName?: string
-): HigherOrderPropMapper
+.withMemo(baseComponent: ReactClass | ReactFunctionalComponent): ReactFunctionalComponent
 ```
 
-Takes a **render props** component and a function that maps props to a new collection of props that are passed to the base component.
+Document needed.
 
-The default value of third parameter (`renderPropName`) is `children`. You can use any prop (e.g., `render`) for render props component to work.
-
-> Check the official documents [Render Props](https://reactjs.org/docs/render-props.html#using-props-other-than-render) for more details.
-
+### `.withRef()`
 ```js
-import { fromRenderProps } from 'recompose';
-const { Consumer: ThemeConsumer } = React.createContext({ theme: 'dark' });
-const { Consumer: I18NConsumer } = React.createContext({ i18n: 'en' });
-const RenderPropsComponent = ({ render, value }) => render({ value: 1 });
-
-const EnhancedApp = compose(
-  // Context (Function as Child Components)
-  fromRenderProps(ThemeConsumer, ({ theme }) => ({ theme })),
-  fromRenderProps(I18NConsumer, ({ i18n }) => ({ locale: i18n })),
-  // Render props
-  fromRenderProps(RenderPropsComponent, ({ value }) => ({ value }), 'render'),
-)(App);
-
-// Same as
-const EnhancedApp = () => (
-  <ThemeConsumer>
-    {({ theme }) => (
-      <I18NConsumer>
-        {({ i18n }) => (
-          <RenderPropsComponent
-            render={({ value }) => (
-              <App theme={theme} locale={i18n} value={value} />
-            )}
-          />
-        )}
-      </I18NConsumer>
-    )}
-  </ThemeConsumer>
-)
+.withRef(baseComponent: ReactClass | ReactFunctionalComponent): ReactFunctionalComponent
 ```
+
+Document needed.
+
+
+
+### `.withCallback()`
+```js
+.withCallback(baseComponent: ReactClass | ReactFunctionalComponent): ReactFunctionalComponent
+```
+
+Document needed.
+
 
 ## Static property helpers
 
