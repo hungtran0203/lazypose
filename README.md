@@ -27,6 +27,11 @@ The main concept of `Lazypose` is to move all Reack Hooks to a single wrapper fu
 - The data is immutable.
 - In the future, they will allow React to make performance optimizations by avoiding unnecessary checks and memory allocations.
 
+| React Hook  | Recompose | Lazypose |
+| ------------- | ------------- | ------------- |
+| ![alt text](https://i.ibb.co/zxj9ZVm/Screen-Shot-2019-06-10-at-10-41-27.png)  | ![alt text](https://i.ibb.co/hFV9L7D/Screen-Shot-2019-06-10-at-11-00-02.png)   | ![alt text](https://i.ibb.co/vmvKr0G/Screen-Shot-2019-06-10-at-11-01-28.png)  |
+
+
 ### Higher-order components made easy
 
 Most of the time when we talk about composition in React, we're talking about composition of components. For example, a `<Blog>` component may be composed of many `<Post>` components, which are composed of many `<Comment>` components.
