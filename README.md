@@ -15,7 +15,7 @@ When React version 16.8.0 is release with React Hook feature, `Recompose` is rep
 
 The main concept of `Lazypose` is to move all Reack Hooks to a single wrapper functional component. And then results of React Hooks are converted or mapped to props then passing to Dumb Presentation Component.
 
-`Lazypose` provide utility to create function component that have several key advantages as stated in `recompose`:
+`Lazypose` provides utility to create function components that have several key advantages as stated in `recompose`:
 
 - They help prevent abuse of the `setState()` API, favoring props instead.
 - They encourage the ["smart" vs. "dumb" component pattern](https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0).
@@ -114,7 +114,7 @@ lazypose()
 
 ### ...optimize rendering performance
 
-Lazypose was heavily inspired by `recompose` and support most of enhancer privided by that library. Also Lazypose is written to resolve the main rendering performance disadvantage of recompose. While `recompose` produces each WrappingHOCComponent for each composed enhancer, `lazypose` produces only one WrappingHOCComponent
+Lazypose was heavily inspired by `recompose` and supports most of enhancers provided by that library. Also Lazypose is written to resolve the main rendering performance disadvantage of recompose. While `recompose` produces each WrappingHOCComponent for each composed enhancer, `lazypose` produces only one WrappingHOCComponent
 `Recompose way`
 ```js
 const enhance = compose(
@@ -226,7 +226,7 @@ const Container = lazypose()
 ```
 
 ### ...full control of props mapping flow
-Lazypose maintain the order of enhancers pushed to lazypose to run the props mapping flow with the same order.
+Lazypose maintains the order of enhancers pushed to lazypose to run the props mapping flow with the same order.
 Also enhancers are kept in 3 difference queues: `init`, `defer` and `default` queue.
 Where `init` queue is run first then `default` queue and `defer` queue is last.
 By utilizing different queues properly, we can control to init nessesary props or clean up props easily
