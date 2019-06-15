@@ -1,5 +1,5 @@
 {
-  "description": "A React utility belt for function components and higher-order components",
+  "description": "A React utility belt for composing React Hooks to single level Higher-order functional components",
   "keywords": [
     "react",
     "higher-order",
@@ -7,17 +7,13 @@
     "microcomponentization",
     "toolkit",
     "utilities",
-    "composition"
+    "composition",
+    "hooks"
   ],
   "main": "dist/Lazypose.cjs.js",
   "module": "dist/Lazypose.esm.js",
   "dependencies": {
-    "@babel/runtime": "^7.0.0",
-    "change-emitter": "^0.1.2",
-    "fbjs": "^0.8.1",
-    "hoist-non-react-statics": "^2.3.1",
-    "react-lifecycles-compat": "^3.0.2",
-    "symbol-observable": "^1.0.4"
+    "@babel/runtime": "^7.0.0"
   },
   "peerDependencies": {
     "react": "^16.8.0"
