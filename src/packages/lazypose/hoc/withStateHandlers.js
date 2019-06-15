@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import _ from 'lodash'
+import get from 'lodash/get'
+import mapValues from 'lodash/mapValues'
 import { applyThunkIfNeeded } from '../utils'
 
 export const withStateHandlers = (
@@ -9,11 +10,11 @@ export const withStateHandlers = (
   const [stateValue, setter] = useState(
     applyThunkIfNeeded(initialState)(ownerProps)
   )
-  const handers = _.mapValues(
+  const handers = mapValues(
     stateUpdaters,
     (stateHandler, stateName) => value => {
       const newStateValue = stateHandler(
-        _.get(stateValue, stateName),
+        get(stateValue, stateName),
         ownerProps
       )(value)
       setter({ ...stateValue, ...newStateValue })

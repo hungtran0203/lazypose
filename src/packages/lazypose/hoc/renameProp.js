@@ -1,10 +1,12 @@
-import _ from 'lodash'
+import omit from 'lodash/omit'
+import has from 'lodash/has'
+import get from 'lodash/get'
 
 export const renameProp = (oldName, newName) => ownerProps => {
-  if (_.has(ownerProps, oldName)) {
-    const val = _.get(ownerProps, oldName)
+  if (has(ownerProps, oldName)) {
+    const val = get(ownerProps, oldName)
     return {
-      ..._.omit(ownerProps, [oldName]),
+      ...omit(ownerProps, [oldName]),
       [newName]: val,
     }
   }

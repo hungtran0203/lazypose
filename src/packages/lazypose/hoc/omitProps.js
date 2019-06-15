@@ -1,9 +1,9 @@
-import _ from 'lodash'
-import { applyThunkIfNeeded } from '../utils'
+import omit from 'lodash/omit'
+import { applyThunkIfNeeded, castArray } from '../utils'
 
 export const omitProps = config => ownerProps => {
   const propsToOmit = applyThunkIfNeeded(config)(ownerProps)
-  return _.omit(ownerProps, propsToOmit || [])
+  return omit(ownerProps, castArray(propsToOmit))
 }
 
 export default omitProps

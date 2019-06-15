@@ -1,14 +1,12 @@
-import _ from 'lodash'
+import mapValues from 'lodash/mapValues'
 import { applyThunkIfNeeded } from '../utils'
 
 export const withHandlers = handlerCreator => ownerProps => {
   const getOwnerProps = () => ownerProps
   const handlers = applyThunkIfNeeded(handlerCreator)(ownerProps)
 
-  const newProps = _.mapValues(
-    handlers,
-    handler => (...args) => handler(getOwnerProps())(...args)
-    // return useCallback((...args) => handler(getOwnerProps())(...args), []);
+  const newProps = mapValues(handlers, handler => (...args) =>
+    handler(getOwnerProps())(...args)
   )
   return { ...ownerProps, ...newProps }
 }

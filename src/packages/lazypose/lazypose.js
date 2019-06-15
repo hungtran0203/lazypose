@@ -1,5 +1,8 @@
 import React from 'react'
-import _ from 'lodash'
+import get from 'lodash/get'
+import entries from 'lodash/entries'
+import set from 'lodash/set'
+import cloneDeep from 'lodash/cloneDeep'
 
 import { RenderComponentError } from './utils'
 
@@ -56,13 +59,13 @@ class LazyPose {
   _getActiveQueue() {
     const queueName = this.queueStack.pop() || 'default'
     return (
-      _.get(this.data.mapperQueues, queueName) || this.data.mapperQueues.default
+      get(this.data.mapperQueues, queueName) || this.data.mapperQueues.default
     )
   }
 
   getQueue(queueName) {
     return [
-      ...(_.get(this.data.mapperQueues, queueName) ||
+      ...(get(this.data.mapperQueues, queueName) ||
         this.data.mapperQueues.default),
     ]
   }
@@ -75,8 +78,8 @@ class LazyPose {
    */
   initData(data) {
     this.data = {}
-    _.entries(this.dataSchema).map(([key, defVal]) => {
-      this.data[key] = _.get(data, key, defVal)
+    entries(this.dataSchema).map(([key, defVal]) => {
+      this.data[key] = get(data, key, defVal)
       return true
     })
   }
@@ -86,7 +89,7 @@ class LazyPose {
    *
    * @memberof LazyPose
    */
-  isStatic = enhancer => !!_.get(enhancer, 'isStatic')
+  isStatic = enhancer => !!get(enhancer, 'isStatic')
 
   /**
    *
@@ -95,10 +98,10 @@ class LazyPose {
    */
   createStatic = (key, value) => {
     const enhancer = Component => {
-      _.set(Component, key, value)
+      set(Component, key, value)
       return true
     }
-    _.set(enhancer, 'isStatic', true)
+    set(enhancer, 'isStatic', true)
     return enhancer
   }
 
@@ -247,7 +250,7 @@ class LazyPose {
    * @memberof LazyPose
    */
   clone() {
-    return new LazyPose({ data: _.cloneDeep(this.data) })
+    return new LazyPose({ data: cloneDeep(this.data) })
   }
 
   /**
@@ -256,7 +259,7 @@ class LazyPose {
    * @memberof LazyPose
    */
   loadEnhancer = enhancerDef => {
-    _.entries(enhancerDef).map(([hocName, hoc]) => {
+    entries(enhancerDef).map(([hocName, hoc]) => {
       if (LazyPose.prototype[hocName]) {
         // console.warn('enhancer exists, ignore')
       } else {

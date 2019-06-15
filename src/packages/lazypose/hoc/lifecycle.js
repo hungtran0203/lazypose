@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react'
-import _ from 'lodash'
+import has from 'lodash/has'
+import get from 'lodash/get'
+import isFunction from 'lodash/isFunction'
+
 import { applyThunkIfNeeded } from '../utils'
 
 const componentDidMount = props => cb => {
@@ -25,10 +28,10 @@ export const lifecycle = config => ownerProps => {
   // simulate this of class component
   const [thisArg] = useState({})
   Object.keys(callbacks).map(cbName => {
-    if (_.has(cbMap, cbName)) {
-      const cbWrapper = _.get(cbMap, cbName)
-      const cb = _.get(callbacks, cbName)
-      if (_.isFunction(cbWrapper) && _.isFunction(cb)) {
+    if (has(cbMap, cbName)) {
+      const cbWrapper = get(cbMap, cbName)
+      const cb = get(callbacks, cbName)
+      if (isFunction(cbWrapper) && isFunction(cb)) {
         cbWrapper(ownerProps)(cb.bind(thisArg))
       }
     }
