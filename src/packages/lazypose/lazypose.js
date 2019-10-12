@@ -4,7 +4,7 @@ import entries from 'lodash/entries'
 import set from 'lodash/set'
 import cloneDeep from 'lodash/cloneDeep'
 
-import { RenderComponentError } from './utils'
+import { RenderComponentError, compose } from './utils'
 
 import * as allHocs from './hoc'
 
@@ -183,9 +183,11 @@ class LazyPose {
    *
    * @memberof LazyPose
    */
-  compose = BaseComponent => {
+  compose = (...Components) => {
     const calculateProps = this.calc
 
+    // support component composing
+    const BaseComponent = compose(Components)
     const WrappedComponent = props => {
       try {
         const mappedProps = calculateProps(props)
