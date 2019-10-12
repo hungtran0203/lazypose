@@ -187,7 +187,7 @@ class LazyPose {
     const calculateProps = this.calc
 
     // support component composing
-    const BaseComponent = compose(Components)
+    const BaseComponent = compose(...Components)
     const WrappedComponent = props => {
       try {
         const mappedProps = calculateProps(props)
