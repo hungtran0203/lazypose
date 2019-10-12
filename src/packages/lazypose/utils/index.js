@@ -43,6 +43,9 @@ export const compose = (...funcs) => {
   if (funcs.length === 1) {
     return funcs[0]
   }
-
-  return funcs.reduce((a, b) => (...args) => a(b(...args)))
+  const Component = funcs.pop()
+  const enhancer = funcs
+    .slice(0, -1)
+    .reduce((a, b) => (...args) => a(b(...args)))
+  return enhancer(Component)
 }
